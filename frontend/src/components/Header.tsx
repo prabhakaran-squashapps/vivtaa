@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
-import { productAPI } from '../services/api';
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
@@ -40,6 +39,7 @@ const Header: React.FC = () => {
   const handleLogout = () => {
     logout();
     setShowUserMenu(false);
+    navigate('/login');
   };
 
   // Sync search input with URL params
@@ -94,15 +94,16 @@ const Header: React.FC = () => {
                 </Link>
                 
                 {/* User Avatar with Dropdown */}
-                <div 
-                  className="user-menu"
-                  onMouseEnter={() => setShowUserMenu(true)}
-                  onMouseLeave={() => setShowUserMenu(false)}
-                >
-                  <div className="user-avatar">
-                    {getUserInitials(user.email)}
+                <div className="user-menu">
+                  <div 
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className="user-avatar">
+                      {getUserInitials(user.email)}
+                    </div>
+                    <span className="user-name">{user.email}</span>
                   </div>
-                  <span className="user-name">{user.email}</span>
                   
                   {showUserMenu && (
                     <div className="user-dropdown">

@@ -19,10 +19,10 @@ export const useCart = () => {
   }, []);
 
   useEffect(() => {
-    if (cart.length > 0) {
-      localStorage.setItem('cart', JSON.stringify(cart));
-    } else {
+    if (cart.length === 0) {
       localStorage.removeItem('cart');
+    } else {
+      localStorage.setItem('cart', JSON.stringify(cart));
     }
   }, [cart]);
 
@@ -78,6 +78,7 @@ export const useCart = () => {
 
   const clearCart = () => {
     setCart([]);
+    localStorage.removeItem('cart');
   };
 
   return {

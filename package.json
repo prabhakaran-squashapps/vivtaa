@@ -1,17 +1,35 @@
 {
   "name": "fitzdo-ecommerce",
   "version": "1.0.0",
-  "description": "FITZDO E-Commerce Application - Full Stack React & Node.js",
+  "description": "Full-stack e-commerce application built with React, Node.js, Express, and MongoDB",
+  "main": "index.js",
   "scripts": {
-    "setup": "cd backend && npm install && cd ../frontend && npm install",
-    "seed": "cd backend && npm run seed",
-    "dev:backend": "cd backend && npm run dev",
-    "dev:frontend": "cd frontend && npm start",
-    "build": "cd frontend && npm install && npm run build",
-    "build:frontend": "cd frontend && npm run build",
-    "start:backend": "cd backend && npm start"
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm start",
+    "build": "cd frontend && npm run build",
+    "install-server": "cd backend && npm install",
+    "install-client": "cd frontend && npm install",
+    "install-all": "npm run install-server && npm run install-client",
+    "seed": "cd backend && node seedProducts.js"
   },
-  "keywords": ["ecommerce", "react", "nodejs", "mongodb", "tailwindcss"],
-  "author": "Interview Assignment",
-  "license": "MIT"
+  "keywords": [
+    "ecommerce",
+    "react",
+    "nodejs",
+    "mongodb",
+    "express",
+    "jwt",
+    "authentication",
+    "shopping-cart"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
 }
