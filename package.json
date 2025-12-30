@@ -1,0 +1,16 @@
+{
+  "name": "fitzdo-ecommerce",
+  "version": "1.0.0",
+  "description": "FITZDO E-Commerce Application - Full Stack React & Node.js",
+  "scripts": {
+    "setup": "cd backend && npm install && cd ../frontend && npm install",
+    "seed": "cd backend && npm run seed",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm start",
+    "build:frontend": "cd frontend && npm run build",
+    "start:backend": "cd backend && npm start"
+  },
+  "keywords": ["ecommerce", "react", "nodejs", "mongodb", "tailwindcss"],
+  "author": "Interview Assignment",
+  "license": "MIT"
+}
