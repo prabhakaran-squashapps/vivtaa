@@ -17,7 +17,6 @@ const Header: React.FC = () => {
     const value = e.target.value;
     setSearchTerm(value);
     
-    // Real-time search - update URL as user types
     if (isProductsPage) {
       if (value.trim()) {
         navigate(`/products?search=${encodeURIComponent(value.trim())}`, { replace: true });
@@ -42,72 +41,73 @@ const Header: React.FC = () => {
     navigate('/login');
   };
 
-  // Sync search input with URL params
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchParam = urlParams.get('search') || '';
     setSearchTerm(searchParam);
   }, [location.search]);
 
-  // Get user initials for avatar
   const getUserInitials = (email: string) => {
     return email.charAt(0).toUpperCase();
   };
 
   return (
-    <header className="header">
-      <div className="container">
-        <div className="header-content" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Link to="/" className="logo">
+    <header className="bg-white shadow-sm py-4">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex flex-col lg:flex-row items-center justify-between w-full gap-4">
+          <Link to="/" className="text-xl lg:text-2xl font-bold text-blue-600 no-underline order-1">
             FITZDO
           </Link>
           
-          {/* Search Bar - Only show when user is logged in */}
           {user && (
-            <div className="search-container" style={{ flex: '0 1 400px' }}>
-              <form onSubmit={handleSearch} className="search-form">
+            <div className="w-full lg:flex-1 lg:max-w-2xl lg:mx-8 order-3 lg:order-2">
+              <form onSubmit={handleSearch} className="flex items-center bg-white border-2 border-gray-200 rounded overflow-hidden">
                 <input
                   type="text"
                   placeholder="Search products..."
                   value={searchTerm}
                   onChange={handleSearchChange}
-                  className="search-input"
+                  className="flex-1 px-3 lg:px-4 py-2 lg:py-3 border-none outline-none text-sm lg:text-base"
                 />
-                <button type="submit" className="search-button">
+                <button type="submit" className="px-3 lg:px-4 py-2 lg:py-3 bg-blue-600 text-white border-none cursor-pointer text-sm lg:text-base hover:bg-blue-700">
                   🔍
                 </button>
               </form>
             </div>
           )}
           
-          <nav className="nav" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <nav className="flex items-center gap-4 lg:gap-6 order-2 lg:order-3">
             {user ? (
               <>
-                <Link to="/products">Products</Link>
-                <Link to="/cart" style={{ position: 'relative' }}>
+                <Link to="/products" className="text-gray-700 no-underline hover:text-blue-600 text-sm lg:text-base">Products</Link>
+                <Link to="/cart" className="relative text-gray-700 no-underline hover:text-blue-600 text-sm lg:text-base">
                   Cart
                   {getTotalItems() > 0 && (
-                    <span className="cart-badge">
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                       {getTotalItems()}
                     </span>
                   )}
                 </Link>
                 
-                {/* User Avatar with Dropdown */}
-                <div className="user-menu">
+                <div className="relative">
                   <div 
                     onClick={() => setShowUserMenu(!showUserMenu)}
-                    style={{ cursor: 'pointer' }}
+                    className="flex items-center gap-2 cursor-pointer p-2 rounded hover:bg-gray-100 transition-colors"
                   >
-                    <div className="user-avatar">
+                    <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">
                       {getUserInitials(user.email)}
                     </div>
-                    <span className="user-name">{user.email}</span>
+                    <span className="hidden lg:block text-sm text-gray-700 max-w-36 overflow-hidden text-ellipsis whitespace-nowrap">
+                      {user.email}
+                    </span>
                   </div>
                   
                   {showUserMenu && (
-                    <div className="user-dropdown">
-                      <button onClick={handleLogout} className="logout-btn">
+                    <div className="absolute top-full right-0 bg-white border border-gray-200 rounded shadow-md min-w-30 z-50 mt-1">
+                      <button 
+                        onClick={handleLogout} 
+                        className="w-full px-4 py-3 bg-none border-none text-left cursor-pointer text-sm text-gray-700 hover:bg-gray-100 hover:text-red-500 transition-colors"
+                      >
                         Logout
                       </button>
                     </div>
@@ -116,8 +116,8 @@ const Header: React.FC = () => {
               </>
             ) : (
               <>
-                <Link to="/login">Login</Link>
-                <Link to="/register" className="btn btn-primary">
+                <Link to="/login" className="text-gray-700 no-underline hover:text-blue-600 text-sm lg:text-base">Login</Link>
+                <Link to="/register" className="bg-blue-600 text-white px-3 lg:px-4 py-2 rounded no-underline hover:bg-blue-700 text-sm lg:text-base">
                   Register
                 </Link>
               </>

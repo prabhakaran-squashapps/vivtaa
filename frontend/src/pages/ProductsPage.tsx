@@ -58,10 +58,9 @@ const ProductsPage: React.FC = () => {
       }
     };
 
-    // Debounce search to avoid too many API calls
     const timeoutId = setTimeout(() => {
       fetchProducts();
-    }, searchTerm ? 300 : 0); // 300ms delay for search, immediate for category
+    }, searchTerm ? 300 : 0);
 
     return () => clearTimeout(timeoutId);
   }, [selectedCategory, searchTerm, pagination.currentPage]);
@@ -103,52 +102,60 @@ const ProductsPage: React.FC = () => {
   if (loading && products.length === 0) return <LoadingSpinner />;
 
   return (
-    <div style={{display: 'flex', minHeight: 'calc(100vh - 80px)'}}>
+    <div className="flex min-h-screen bg-gray-50">
       {/* Mobile Filter Button */}
       <button 
-        className="mobile-filter-btn"
+        className="lg:hidden fixed top-20 left-4 z-50 bg-blue-600 text-white border-none px-3 py-2 rounded text-xs cursor-pointer"
         onClick={() => setShowSidebar(!showSidebar)}
       >
         📂 Filters
       </button>
       
-      {/* Left Sidebar - Categories */}
-      <div className={`sidebar ${showSidebar ? 'sidebar-open' : ''}`}>
-        <div className="sidebar-header">
-          <h3 className="sidebar-title">Categories</h3>
-          <button className="sidebar-close" onClick={() => setShowSidebar(false)}>✕</button>
+      {/* Sidebar - Categories */}
+      <div className={`${showSidebar ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:static top-0 left-0 w-64 h-full bg-white z-40 transition-transform duration-300 shadow-lg lg:shadow-none border-r border-gray-200`}>
+        <div className="lg:hidden flex justify-between items-center p-4 border-b border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-800">Categories</h3>
+          <button className="text-gray-600 text-xl" onClick={() => setShowSidebar(false)}>✕</button>
         </div>
-        <div className="category-list">
-          <button
-            onClick={() => {
-              handleCategoryChange('');
-              setShowSidebar(false);
-            }}
-            className={`category-item ${selectedCategory === '' ? 'active' : ''}`}
-          >
-            All Products
-          </button>
-          {categories.map((category) => (
+        
+        <div className="p-4">
+          <h3 className="hidden lg:block text-lg font-semibold mb-4 text-gray-800 border-b-2 border-blue-600 pb-2">Categories</h3>
+          <div className="flex flex-col gap-2">
             <button
-              key={category}
               onClick={() => {
-                handleCategoryChange(category);
+                handleCategoryChange('');
                 setShowSidebar(false);
               }}
-              className={`category-item ${selectedCategory === category ? 'active' : ''}`}
+              className={`px-4 py-3 text-left border border-gray-200 rounded cursor-pointer text-sm transition-all ${
+                selectedCategory === '' ? 'bg-blue-600 text-white border-blue-600' : 'text-gray-700 hover:bg-gray-100 hover:border-blue-600'
+              }`}
             >
-              {category}
+              All Products
             </button>
-          ))}
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => {
+                  handleCategoryChange(category);
+                  setShowSidebar(false);
+                }}
+                className={`px-4 py-3 text-left border border-gray-200 rounded cursor-pointer text-sm transition-all ${
+                  selectedCategory === category ? 'bg-blue-600 text-white border-blue-600' : 'text-gray-700 hover:bg-gray-100 hover:border-blue-600'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="main-content">
-        <div className="container" style={{padding: '2rem 1rem'}}>
+      <div className="flex-1 lg:ml-0">
+        <div className="max-w-7xl mx-auto p-4 lg:p-8">
           {/* Page Header */}
-          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem'}}>
-            <h1 style={{fontSize: '2rem', fontWeight: 'bold', color: '#333', margin: 0}}>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+            <h1 className="text-2xl lg:text-3xl font-bold text-gray-800">
               {selectedCategory || (searchTerm ? `Search Results` : 'All Products')}
             </h1>
             
@@ -156,15 +163,7 @@ const ProductsPage: React.FC = () => {
             {(selectedCategory || searchTerm) && (
               <button
                 onClick={clearFilters}
-                style={{
-                  padding: '0.5rem 1rem',
-                  backgroundColor: '#ef4444',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '0.875rem'
-                }}
+                className="px-4 py-2 bg-red-500 text-white border-none rounded cursor-pointer text-sm hover:bg-red-600"
               >
                 Clear Filters
               </button>
@@ -172,7 +171,7 @@ const ProductsPage: React.FC = () => {
           </div>
 
           {/* Results Info */}
-          <div style={{marginBottom: '1.5rem', color: '#666', fontSize: '0.875rem'}}>
+          <div className="mb-6 text-sm text-gray-600">
             {loading ? (
               <span>Loading...</span>
             ) : (
@@ -187,18 +186,18 @@ const ProductsPage: React.FC = () => {
 
           {/* Error State */}
           {error && (
-            <div className="error" style={{textAlign: 'center', padding: '2rem'}}>{error}</div>
+            <div className="text-red-500 text-center p-8">{error}</div>
           )}
 
           {/* Products Grid */}
           {products.length === 0 && !loading ? (
-            <div style={{textAlign: 'center', color: '#666', padding: '3rem'}}>
-              <h3>No products found</h3>
+            <div className="text-center text-gray-600 p-12">
+              <h3 className="text-xl mb-2">No products found</h3>
               <p>Try selecting a different category or search term</p>
             </div>
           ) : (
             <>
-              <div className="products-grid">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
                 {products.map((product) => (
                   <ProductCard key={product._id} product={product} />
                 ))}
@@ -206,11 +205,11 @@ const ProductsPage: React.FC = () => {
               
               {/* Pagination */}
               {pagination.totalPages > 1 && (
-                <div className="pagination">
+                <div className="flex justify-center items-center gap-2 mt-8 p-4 flex-wrap">
                   <button 
                     onClick={() => handlePageChange(pagination.currentPage - 1)}
                     disabled={pagination.currentPage === 1}
-                    className="page-btn"
+                    className="px-3 py-2 border border-gray-300 bg-white text-gray-800 rounded cursor-pointer text-sm min-w-[40px] hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Previous
                   </button>
@@ -219,7 +218,11 @@ const ProductsPage: React.FC = () => {
                     <button
                       key={i + 1}
                       onClick={() => handlePageChange(i + 1)}
-                      className={`page-btn ${pagination.currentPage === i + 1 ? 'active' : ''}`}
+                      className={`px-3 py-2 border rounded cursor-pointer text-sm min-w-[40px] ${
+                        pagination.currentPage === i + 1 
+                          ? 'bg-blue-600 text-white border-blue-600' 
+                          : 'border-gray-300 bg-white text-gray-800 hover:bg-gray-100'
+                      }`}
                     >
                       {i + 1}
                     </button>
@@ -228,7 +231,7 @@ const ProductsPage: React.FC = () => {
                   <button 
                     onClick={() => handlePageChange(pagination.currentPage + 1)}
                     disabled={pagination.currentPage === pagination.totalPages}
-                    className="page-btn"
+                    className="px-3 py-2 border border-gray-300 bg-white text-gray-800 rounded cursor-pointer text-sm min-w-[40px] hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Next
                   </button>
